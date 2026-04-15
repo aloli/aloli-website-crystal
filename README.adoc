@@ -1,0 +1,29 @@
+= ALOLI Corporate Website
+
+Static corporate website for https://aloli.fr[ALOLI sas], an IT services company based in Laguiole, Aveyron, France.
+
+== Stack
+
+* Pure HTML / CSS — no JavaScript frameworks
+* Responsive, dark-mode ready
+* Bilingual: French (default) and English
+* Hosted on GitHub Pages
+
+== Structure
+
+[source]
+----
+index.html          # French version (default)
+en/index.html       # English version
+css/style.css       # All styles
+fonts/explora.ttf   # Explora display font
+images/             # Logo and assets
+----
+
+== Deployment
+
+Deployed automatically to GitHub Pages on push to the `production` branch via `.github/workflows/deploy.yml`.
+
+== License
+
+(C) ALOLI sas 2011-2026. All rights reserved.
