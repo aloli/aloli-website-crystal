@@ -233,8 +233,10 @@
         </div>
       </div>
 
-      <form class="contact-form" action="#" method="post">
+      <form id="contact-form" class="contact-form" action="https://form.aloli.fr/submit" method="POST">
         <h3>Send us a message</h3>
+        <!-- Honeypot -->
+        <div style="display:none"><input type="text" name="_gotcha" tabindex="-1" autocomplete="off"></div>
         <div class="form-group">
           <label for="name">Name</label>
           <input type="text" id="name" name="name" required placeholder="Your name">
@@ -248,6 +250,7 @@
           <textarea id="message" name="message" required placeholder="Tell us about your project..."></textarea>
         </div>
         <button type="submit" class="btn--submit">Send</button>
+        <p id="form-status" style="margin-top:1rem;display:none"></p>
       </form>
 
     </div>
@@ -285,6 +288,40 @@
       els.forEach(function (el) { observer.observe(el); });
     } else {
       els.forEach(function (el) { el.classList.add('visible'); });
+    }
+
+    // Contact form AJAX submission
+    var form = document.getElementById('contact-form');
+    var status = document.getElementById('form-status');
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        status.style.display = 'block';
+        status.style.color = '';
+        status.textContent = 'Sending...';
+        var data = new FormData(form);
+        var body = {};
+        data.forEach(function (v, k) { body[k] = v; });
+        fetch(form.action, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(body)
+        }).then(function (res) {
+          return res.json().then(function (json) { return { ok: res.ok, json: json }; });
+        }).then(function (result) {
+          if (result.ok && result.json.success) {
+            status.style.color = '#78B82A';
+            status.textContent = 'Message sent successfully!';
+            form.reset();
+          } else {
+            status.style.color = '#E72486';
+            status.textContent = result.json.error || 'An error occurred.';
+          }
+        }).catch(function () {
+          status.style.color = '#E72486';
+          status.textContent = 'Unable to reach the server. Please try again later.';
+        });
+      });
     }
   });
 </script>
